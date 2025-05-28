@@ -26,7 +26,7 @@ torch
 
 ### Chạy với bàn phím (người chơi điều khiển):
 ```bash
-python game_manual.py
+python game.py
 ```
 
 ### Chạy mô phỏng với DQN (AI điều khiển):
@@ -41,8 +41,7 @@ python trainer.py
 ```
 📂 game_falling_pad/
 │
-├── game_manual.py         # Trò chơi điều khiển bằng tay (bàn phím)
-├── game_env.py            # Môi trường trò chơi để huấn luyện AI (dạng Gym-like)
+├── game.py                # Trò chơi điều khiển bằng tay (bàn phím) và môi trường cho DQN
 ├── dqn_agent.py           # Định nghĩa agent DQN và logic huấn luyện
 ├── trainer.py             # Tập tin chính để huấn luyện DQN
 ├── requirements.txt       # Danh sách thư viện cần cài
@@ -53,7 +52,7 @@ python trainer.py
 
 ## 📄 Mô tả các tập tin
 
-- `game_manual.py`: Phiên bản người chơi điều khiển thanh đỡ bằng phím trái/phải.
+- `game.py`: Phiên bản người chơi điều khiển thanh đỡ bằng phím trái/phải.
 - `game_env.py`: Định nghĩa môi trường game dưới dạng tương tự như OpenAI Gym để AI có thể tương tác.
 - `dqn_agent.py`: Cài đặt agent sử dụng Deep Q-Network, bao gồm replay buffer và cập nhật tham số.
 - `trainer.py`: Tập tin chính dùng để khởi tạo môi trường, agent và tiến hành huấn luyện.
@@ -89,7 +88,6 @@ AI sẽ được huấn luyện để đỡ hình vuông bằng cách tối đa 
 - Replay buffer và epsilon-greedy được tích hợp để đảm bảo sự ổn định khi học.
 - Trò chơi không dùng đến bàn phím trong chế độ huấn luyện, thay vào đó mô phỏng các phím thông qua các danh sách `keys`.
 - Mô hình này chưa được lưu nếu bạn thích bạn có thể lưu nó lại sau khi train nhằm cho các mục đích test sau đó của bạn.
-- Nếu bạn muốn test thử độ chính xác của game, hãy mở comment # game_loop() ở file game.py và chạy python game.py để thử.
 
 ---
 

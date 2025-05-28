@@ -31,6 +31,6 @@ dqn_config = {
     "epsilon_end": 0.01,
     "epsilon_decay": 0.995,
     "max_memory_size": 1000000,
-    "start_training": 1024*10,
+    "start_training": 1024,
     "batch_size": 512
 }

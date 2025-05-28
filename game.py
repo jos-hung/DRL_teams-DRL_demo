@@ -31,7 +31,8 @@ def reset_game():
 def run(state, keys, real_play=False, expect_maximum_score=100):
     screen.fill(WHITE)
     done = False
-
+    if real_play:
+        reward = 0
     if keys[pygame.K_LEFT] and state["paddle_x"] > 0:
         state["paddle_x"] -= paddle_speed
     if keys[pygame.K_RIGHT] and state["paddle_x"] < WIDTH - paddle_width:
@@ -122,4 +123,5 @@ def game_loop():
         state = state_[0]
         pygame.display.update()
         clock.tick(60)
-# game_loop()
+if __name__ == "__main__":
+    game_loop()

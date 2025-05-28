@@ -37,32 +37,28 @@ def run(state, keys, real_play=False, expect_maximum_score=100):
     if keys[pygame.K_RIGHT] and state["paddle_x"] < WIDTH - paddle_width:
         state["paddle_x"] += paddle_speed
 
-    reward = -1 
-    hit_check = False
-
     if not state["game_over"]:
         # Move square
         state["square_x"] += state["vx"]
         state["square_y"] += state["vy"]
 
-        if state["square_y"] < paddle_y and not hit_check:  
-            ball_center = state["square_x"] 
-            paddle_center = state["paddle_x"] 
+        if state["square_y"] <= paddle_y:  
+            ball_center = state["square_x"] + paddle_height
+            paddle_center = state["paddle_x"] + paddle_width / 2
             horizontal_error = abs(ball_center - paddle_center)
-            max_error = WIDTH/3  
+            max_error = WIDTH/3
+            #đưa ra giá trị -1 đến 0, càng gần paddle thì reward càng cao
+            reward = -horizontal_error/max_error 
             if round(horizontal_error,2) == 0:
-                reward = 1
-            else:
-                reward = -horizontal_error/max_error #đưa ra giá trị -1 đến 0, càng gần paddle thì reward càng cao
-      
+                reward = 1      
         # Wall collision
         if state["square_x"] <= 0 or state["square_x"] >= WIDTH - 20:
             state["vx"] = -state["vx"]
 
         # Paddle collision
         if (
-            paddle_y <= state["square_y"] + 20 <= paddle_y + paddle_height and
-            state["paddle_x"] <= state["square_x"] + 10 <= state["paddle_x"] + paddle_width
+            paddle_y <= state["square_y"] + 2*square_height <= paddle_y + paddle_height and
+            state["paddle_x"] <= state["square_x"] + square_height <= state["paddle_x"] + paddle_width
         ):
             impact = (state["square_x"] + 10) - (state["paddle_x"] + paddle_width / 2)
             state["vx"] += impact / (paddle_width / 4)
@@ -75,14 +71,13 @@ def run(state, keys, real_play=False, expect_maximum_score=100):
                 else:
                     state["vy"] += 1
             reward = 1
-            hit_check = True
 
         # Ceiling
         if state["square_y"] <= 0:
             state["vy"] = abs(state["vy"])
 
         # Missed paddle
-        if state["square_y"] > HEIGHT and not hit_check:
+        if state["square_y"] > paddle_y:
             state["game_over"] = True
             reward = -1
 

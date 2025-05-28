@@ -7,6 +7,7 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from config import dqn_config
 
 def fake_keys_binary(direction):
     keys = defaultdict(int)
@@ -19,9 +20,10 @@ def fake_keys_binary(direction):
 epochs = 5000
 state_size = 7  # square_x, square_y, vx, vy, paddle_x, game_over
 action_size = 2  # left, right
-window_size = 1000  
-
-dqn_agent = DQNAgent(state_size, action_size, batch_size=512, max_memory_size=1000000, start_training=512*10)
+window_size = 100  
+dqn_config['state_size'] = state_size
+dqn_config['action_size'] = action_size
+dqn_agent = DQNAgent(**dqn_config)
 
 epoch_scores = []
 moving_avg_scores = []
@@ -33,6 +35,7 @@ for epoch in range(epochs):
     done = False
     total_reward = 0
     clock = pygame.time.Clock()
+    cnt = 0
     while not done:
         save_state = state.copy()
         # save_state.pop('score')
@@ -62,19 +65,21 @@ for epoch in range(epochs):
 
         state = next_state
         pygame.display.update()
-        epoch_scores.append(reward)
-        if len(epoch_scores) >= window_size:
-            moving_avg = np.mean(epoch_scores[-window_size:])
-            moving_avg_scores.append(moving_avg)
 
         if epoch > 500:
-            clock.tick(60)
+            clock.tick(80)
+        cnt += 1
     dqn_agent.update_model()
+    
+    epoch_scores.append(total_reward/cnt)
+    if len(epoch_scores) >= window_size:
+        moving_avg = np.mean(epoch_scores[-window_size:])
+        moving_avg_scores.append(moving_avg)
 
     if epoch%200 == 0 and epoch > 0:
         dqn_agent.update_target_network()
 
-    print(f"Epoch {epoch + 1}/{epochs}, Total Reward: {total_reward}, Epsilon: {dqn_agent.epsilon:.2f}")
+    print(f"Epoch {epoch + 1}/{epochs}, AVG Reward: {total_reward/cnt}, Epsilon: {dqn_agent.epsilon:.2f}")
 
     if (epoch + 1) % 100 == 0:
         plt.figure(figsize=(10, 5))

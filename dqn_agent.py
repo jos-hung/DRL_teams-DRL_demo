@@ -4,8 +4,8 @@ import numpy as np
 import random
 from config import device
 class DQNAgent:
-    def __init__(self, state_size, action_size, learning_rate=0.00001, gamma=0.99, 
-                 epsilon_start=1.0, epsilon_end=0.01, epsilon_decay=0.99, max_memory_size=10000, start_training=1024, batch_size=32):
+    def __init__(self, state_size, action_size, learning_rate=0.000001, gamma=0.95, 
+                 epsilon_start=1.0, epsilon_end=0.01, epsilon_decay=0.995, max_memory_size=10000, start_training=1024, batch_size=32):
         
         self.state_size = state_size
         self.action_size = action_size
